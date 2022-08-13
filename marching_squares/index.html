@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset= "utf-8" />
+    <title>DXOpal demos - marching squares</title>
+    <script type="text/javascript" src="../dxopal.min.js"></script>
+
+    <script>
+     window.showGrid = false;
+
+     function onchange_showGrid(el) {
+       window.showGrid = el.checked;
+     }
+    </script>
+
+    <script type="text/ruby">
+      DXOpal.dump_error{ require_remote "main.rb?#{Time.now.to_i}" }
+    </script>
+  </head>
+
+  <body>
+    <a href="../index.html">back</a>
+    <hr />
+    <label>
+      <input type="checkbox" onchange="onchange_showGrid(this)" /> show grid
+    </label>
+    <br />
+    <canvas id="dxopal-canvas"></canvas>
+    <div id="dxopal-errors"></div>
+  </body>
+</html>
