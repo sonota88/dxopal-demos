@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset= "utf-8" />
+    <title>Fourier transform | dxopal-demos</title>
+
+    <script src="./main.js"></script>
+    <script type="text/javascript" src="../dxopal.min.js"></script>
+    <script type="text/ruby">
+      DXOpal.dump_error{ require_remote "main.rb?#{Time.now}" }
+    </script>
+  </head>
+
+  <body>
+    <a href="../index.html">back</a>
+    <hr />
+
+    play sound: 
+    <button onclick="playWave(55)">55 Hz</button>
+    <button onclick="playWave(110)">110 Hz</button>
+    <button onclick="playWave(220)">220 Hz</button>
+    <button onclick="playWave(440)">440 Hz</button>
+    <button onclick="playWave(880)">880 Hz</button>
+    <button onclick="playWave(1760)">1760 Hz</button>
+    <br />
+    <br />
+
+    <canvas id="dxopal-canvas"></canvas>
+    <div id="dxopal-errors"></div>
+  </body>
+</html>
