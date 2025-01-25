@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset= "utf-8" />
+    <title>DXOpal demo</title>
+    <!-- <script type="text/javascript" src="../../build/dxopal.js"></script> -->
+    <script type="text/javascript" src="./dxopal_160_set_volume.js"></script>
+    <script type="text/ruby">
+      DXOpal.dump_error{ require_remote 'main.rb' }
+    </script>
+  </head>
+
+  <body>
+    <a href="../index.html">back</a>
+    <br />
+    <canvas id="dxopal-canvas"></canvas><br>
+    <div id="dxopal-loading"></div>
+    <div id="dxopal-errors"></div>
+
+    <hr />
+
+<pre>
+以下の2つのファイルをダウンロードして DXRuby で実行することもできます。
+- <a href="./main.rb">main.rb</a>
+- <a href="./s1.wav">s1.wav</a>
+</pre>
+
+    <hr />
+
+    <pre>
+● dxruby_compat について
+
+クリックでトグルします。
+on になっている場合 DXRuby と同じ音量になるように補正します。
+
+理論的な裏付けに則ったものではなく、
+作者の環境に合わせたヒューリスティックな補正です。
+作者の環境ではこれで耳で聞く分には違いが分からないレベルになります。
+
+「必要であればゲームアプリ側での簡易な変換によりこうした対応も可能である」
+ということまで確認しておきたくて付けたデモ機能です。
+    </pre>
+
+    <script>
+    </script>
+  </body>
+</html>
