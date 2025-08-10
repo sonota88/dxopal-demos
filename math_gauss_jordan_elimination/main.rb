@@ -1,5 +1,8 @@
-require "dxopal"
-include DXOpal
+case RUBY_ENGINE
+when "opal"  then require "dxopal"
+when "jruby" then require "dxjruby"
+else raise "unsupported engine (#{RUBY_ENGINE})"
+end
 
 WIN_W = 512
 WIN_H = 512

@@ -1,5 +1,8 @@
-require "dxopal"
-include DXOpal
+case RUBY_ENGINE
+when "opal"  then require "dxopal"
+when "jruby" then require "dxjruby"
+else raise "unsupported engine (#{RUBY_ENGINE})"
+end
 
 CELL_WIDTH = 8
 CELL_WIDTH_HALF = CELL_WIDTH / 2.0

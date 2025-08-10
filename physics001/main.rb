@@ -1,5 +1,8 @@
-require "dxopal"
-include DXOpal
+case RUBY_ENGINE
+when "opal"  then require "dxopal"
+when "jruby" then require "dxjruby"
+else raise "unsupported engine (#{RUBY_ENGINE})"
+end
 
 FPS = 60
 DT_BASE = 1.0 / 60.0
