@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset= "utf-8" />
+    <title>sound :: register from memory :: minimal example | dxopal-demos</title>
+    <!-- <script type="text/javascript" src="../../build/dxopal.js"></script> -->
+    <script type="text/javascript" src="../dxopal-1.6.0.min.js"></script>
+    <script type="text/javascript" src="./lib.js"></script>
+    <script type="text/ruby">
+      DXOpal.dump_error{ require_remote 'main.rb?t=#{Time.now.to_i}' }
+    </script>
+  </head>
+
+  <body style="padding: 1rem;">
+    <a href="../index.html">back</a>
+    <br />
+    <canvas id="dxopal-canvas"></canvas><br>
+    <div id="dxopal-loading"></div>
+    <div id="dxopal-errors"></div>
+
+    <hr />
+
+    <pre>
+- マウスクリックで音を再生します
+    </pre>
+  </body>
+</html>
