@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset= "utf-8" />
+    <title>sound :: register from memory examples | dxopal-demos</title>
+    <!-- <script type="text/javascript" src="../../build/dxopal.js"></script> -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/tone/15.3.5/Tone.min.js"
+      integrity="sha512-YDQMZjcsJD/jOfoz62wl1I/01xPYfqs8qAWuUyTDJXoSQI8+IhT3LPzTv/70SRybHgXfsp/+tzK0jGxDTOvpsQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="../dxopal-1.6.0.min.js"></script>
+    <script type="text/javascript" src="./lib.js"></script>
+    <script type="text/ruby">
+      DXOpal.dump_error{ require_remote 'main.rb?t=#{Time.now.to_i}' }
+    </script>
+  </head>
+
+  <body style="padding: 1rem;">
+    <a href="../index.html">back</a>
+    <br />
+    <canvas id="dxopal-canvas"></canvas><br>
+    <div id="dxopal-loading"></div>
+    <div id="dxopal-errors"></div>
+
+    <hr />
+
+    <pre>
+関連:
+
+- <a href="https://qiita.com/sonota88/items/d2c7d91d7058cda63e82">ファミコンのノイズ音を作ってみた（最低限の部分だけ）</a>
+    </pre>
+  </body>
+</html>
