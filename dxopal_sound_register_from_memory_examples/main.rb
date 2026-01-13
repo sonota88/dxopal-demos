@@ -66,6 +66,10 @@ BUTTONS = [
     onclick: ->(){ play Sound[:ms4] }
   },
   {
+    name: "ms5", text: "example 5",
+    onclick: ->(){ play Sound[:ms5] }
+  },
+  {
     name: "nes_tri_220", text: "NES triangle 220Hz",
     onclick: ->(){ play Sound[:nes_tri_220] }
   },
@@ -120,6 +124,7 @@ WIN_W = 400
 WIN_H = BUTTON_H * BUTTONS.size
 
 # --------------------------------
+
 def osc_sin(x)
   Math.sin(x)
 end
@@ -133,12 +138,18 @@ def osc_sq(x, duty_ratio = 0.5)
   end
 end
 
-# --------------------------------
+# 4c: 60 / 4a: 69
+def to_hz(note_no)
+  n = note_no - (5 * 12 + 9)
+  440.0 * (2.0 ** (n.to_f / 12))
+end
 
 def lerp(v1, v2, v2_ratio)
   v1_ratio = 1.0 - v2_ratio
   v1 * v1_ratio + v2 * v2_ratio
 end
+
+# --------------------------------
 
 def make_sound_1
   dur_msec = 500
@@ -227,6 +238,31 @@ def make_sound_4
     end
 
     osc_sq(x) * (ratio_inv**2) * MASTER_VOLUME
+  }
+
+  memory_sound
+end
+
+def make_sound_5
+  dur_msec = 100
+  dur_sec = dur_msec.to_f / 1000
+  vol = 0.6
+
+  unit = [0, 7, 4, 11].map { |nn| nn + 36 }
+  note_nos = []
+  note_nos += unit
+  note_nos += unit.map { |nn| nn + 12 }
+  note_nos += unit.map { |nn| nn + 24 }
+  freqs = note_nos.map { |nn| to_hz(nn) }
+
+  x = 0.0
+  memory_sound = MemorySound.generate(dur_msec) { |i, t|
+    ratio = t / dur_sec
+    i = (note_nos.size * ratio).floor
+    freq = freqs[i]
+    x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
+    x += x_delta
+    osc_sq(x, 0.125) * vol * MASTER_VOLUME
   }
 
   memory_sound
@@ -418,6 +454,7 @@ def init_010
   sound_register_from_memory(:ms2, make_sound_2)
   sound_register_from_memory(:ms3, make_sound_3)
   sound_register_from_memory(:ms4, make_sound_4)
+  sound_register_from_memory(:ms5, make_sound_5)
 
   sound_register_from_memory(:nes_tri_220, make_sound_nes_tri(220))
   sound_register_from_memory(:nes_tri_110, make_sound_nes_tri(110))
