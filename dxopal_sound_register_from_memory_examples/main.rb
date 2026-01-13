@@ -135,7 +135,7 @@ end
 
 # --------------------------------
 
-def mix_values(v1, v2, v2_ratio)
+def lerp(v1, v2, v2_ratio)
   v1_ratio = 1.0 - v2_ratio
   v1 * v1_ratio + v2 * v2_ratio
 end
@@ -163,7 +163,7 @@ def make_sound_2
   memory_sound = MemorySound.generate(dur_msec) { |i, t|
     ratio = t / dur_sec
     ratio_inv = 1.0 - ratio
-    freq = mix_values(freq0, freq1, ratio)
+    freq = lerp(freq0, freq1, ratio)
     x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
     osc_sq(x) * ratio_inv * MASTER_VOLUME
@@ -205,7 +205,7 @@ def make_sound_4
   dur_sec = dur_msec.to_f / 1000
   freq_base0 = 200
   freq_base1 = 2000
-  freq_base = mix_values(freq_base0, freq_base1, 0)
+  freq_base = lerp(freq_base0, freq_base1, 0)
   w = freq_base * 0.9 # width
   freq = freq_base
   sec_per_cycle = 1.0 / freq
@@ -220,7 +220,7 @@ def make_sound_4
 
     ci = (t.to_f / sec_per_cycle).floor
     if ci != cycle_i_prev
-      freq_base = mix_values(freq_base0, freq_base1, ratio)
+      freq_base = lerp(freq_base0, freq_base1, ratio)
       w = freq_base * 0.9
       freq = freq_base - (w * 0.5) + rand * w
       cycle_i_prev = ci
@@ -242,7 +242,7 @@ def make_sound_nes_tri(freq, freq_to: nil)
   x = 0.0
   memory_sound = MemorySound.generate(dur_msec) { |i, t|
     ratio = t / dur_sec
-    freq = mix_values(freq0, freq1, ratio)
+    freq = lerp(freq0, freq1, ratio)
     x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
     Nes::Triangle.osc(x) * MASTER_VOLUME
