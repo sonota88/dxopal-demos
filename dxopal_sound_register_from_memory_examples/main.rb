@@ -129,7 +129,7 @@ def osc_sin(x)
   Math.sin(x)
 end
 
-def osc_sq(x, duty_ratio = 0.5)
+def osc_pulse(x, duty_ratio = 0.5)
   ratio = (x.to_f % TWO_PI) / TWO_PI
   if ratio < duty_ratio
     1.0
@@ -177,7 +177,7 @@ def make_sound_2
     freq = lerp(freq0, freq1, ratio)
     x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
-    osc_sq(x) * ratio_inv * MASTER_VOLUME
+    osc_pulse(x) * ratio_inv * MASTER_VOLUME
   }
 
   memory_sound
@@ -205,7 +205,7 @@ def make_sound_3
       cycle_i_prev = ci
     end
 
-    osc_sq(x) * (ratio_inv**2) * MASTER_VOLUME
+    osc_pulse(x) * (ratio_inv**2) * MASTER_VOLUME
   }
 
   memory_sound
@@ -237,7 +237,7 @@ def make_sound_4
       cycle_i_prev = ci
     end
 
-    osc_sq(x) * (ratio_inv**2) * MASTER_VOLUME
+    osc_pulse(x) * (ratio_inv**2) * MASTER_VOLUME
   }
 
   memory_sound
@@ -262,7 +262,7 @@ def make_sound_5
     freq = freqs[i]
     x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
-    osc_sq(x, 0.125) * vol * MASTER_VOLUME
+    osc_pulse(x, 0.125) * vol * MASTER_VOLUME
   }
 
   memory_sound
