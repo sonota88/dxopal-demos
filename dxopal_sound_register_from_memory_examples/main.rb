@@ -70,6 +70,14 @@ BUTTONS = [
     onclick: ->(){ play Sound[:ms5] }
   },
   {
+    name: "ms6", text: "example 6",
+    onclick: ->(){ play Sound[:ms6] }
+  },
+  {
+    name: "ms7", text: "example 7",
+    onclick: ->(){ play Sound[:ms7] }
+  },
+  {
     name: "nes_tri_220", text: "NES triangle 220Hz",
     onclick: ->(){ play Sound[:nes_tri_220] }
   },
@@ -276,6 +284,87 @@ def make_sound_5
   memory_sound
 end
 
+def wavetable_normalize(wt)
+  max = wt.map(&:abs).max
+  wt.map{|x| x.to_f / max }
+end
+
+def wavetable_get(wt, x)
+  ratio = (x.to_f / TWO_PI) % 1
+  i = (wt.size * ratio).floor
+  wt[i]
+end
+
+def make_sound_6
+  samples = []
+  dur_msec = 300
+  dur_sec = dur_msec.to_f / 1000
+  srate = MemorySound::SAMPLING_RATE
+  num_samples = (srate * dur_sec).floor
+  sec_per_sample = 1.0 / srate
+  vol = 0.7
+
+  freqs = [0, 4, 7, 11]
+            .map { |nn| nn + 72 }
+            .map { |nn| to_hz(nn) }
+  freqs = freqs * 3
+
+  x = 0.0
+  memory_sound = MemorySound.generate(dur_msec) { |i, t|
+    ratio = i.to_f / num_samples
+    ratio_inv = 1.0 - ratio
+
+    v = osc_sq(x, 0.25) * vol * ratio_inv
+
+    fi = (freqs.size * ratio).floor
+    f = freqs[fi]
+
+    x_delta = TWO_PI * f * sec_per_sample
+    x += x_delta
+
+    v * MASTER_VOLUME
+  }
+
+  memory_sound
+end
+
+def make_sound_7
+  samples = []
+  dur_msec = 500
+  dur_sec = dur_msec.to_f / 1000
+  srate = MemorySound::SAMPLING_RATE
+  num_samples = (srate * dur_sec).floor
+  sec_per_sample = 1.0 / srate
+  vol = 0.8
+
+  wt = wavetable_normalize(
+    [7, -7, 7, -7, -0, -0, -0, -0,]
+  )
+
+  freqs = [0, 1, 2, 3]
+            .map { |nn| nn * 0.5 }
+            .map { |nn| nn + 60 }
+            .map { |nn| to_hz(nn) }
+  freqs = freqs * 3
+
+  x = 0.0
+  memory_sound = MemorySound.generate(dur_msec) { |i, t|
+    ratio = i.to_f / num_samples
+    ratio_inv = 1.0 - ratio
+
+    v = wavetable_get(wt, x) * vol * ratio_inv
+
+    fi = (freqs.size * ratio).floor
+    f = freqs[fi]
+    x_delta = TWO_PI * f * sec_per_sample
+    x += x_delta
+
+    v * MASTER_VOLUME
+  }
+
+  memory_sound
+end
+
 def make_sound_nes_tri(freq, freq_to: nil)
   dur_msec = 300
   dur_sec = dur_msec.to_f / 1000
@@ -463,6 +552,8 @@ def init_010
   sound_register_from_memory(:ms3, make_sound_3)
   sound_register_from_memory(:ms4, make_sound_4)
   sound_register_from_memory(:ms5, make_sound_5)
+  sound_register_from_memory(:ms6, make_sound_6)
+  sound_register_from_memory(:ms7, make_sound_7)
 
   sound_register_from_memory(:nes_tri_220, make_sound_nes_tri(220))
   sound_register_from_memory(:nes_tri_110, make_sound_nes_tri(110))
@@ -503,7 +594,7 @@ def main
   Window.load_resources do
     Window.loop do
       # button index
-      bi = nil
+      bi = (Input.mouse_y / BUTTON_H).floor
 
       if Input.mouse_push?(M_LBUTTON)
         bi = (Input.mouse_y / BUTTON_H).floor
