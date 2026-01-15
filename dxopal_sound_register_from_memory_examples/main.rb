@@ -145,13 +145,24 @@ def osc_sin(x)
   Math.sin(x)
 end
 
-def osc_sq(x, duty_ratio = 0.5)
+def osc_pulse(x, duty_ratio = 0.5)
   ratio = (x.to_f % TWO_PI) / TWO_PI
   if ratio < duty_ratio
     1.0
   else
     -1.0
   end
+end
+
+def wavetable_normalize(wt)
+  max = wt.map(&:abs).max
+  wt.map { |x| x.to_f / max }
+end
+
+def wavetable_get(wt, x)
+  ratio = (x.to_f / TWO_PI) % 1
+  i = (wt.size * ratio).floor
+  wt[i]
 end
 
 # 4c: 60 / 4a: 69
@@ -193,7 +204,7 @@ def make_sound_2
     freq = lerp(freq0, freq1, ratio)
     x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
-    osc_sq(x) * ratio_inv * MASTER_VOLUME
+    osc_pulse(x) * ratio_inv * MASTER_VOLUME
   }
 
   memory_sound
@@ -221,7 +232,7 @@ def make_sound_3
       cycle_i_prev = ci
     end
 
-    osc_sq(x) * (ratio_inv**2) * MASTER_VOLUME
+    osc_pulse(x) * (ratio_inv**2) * MASTER_VOLUME
   }
 
   memory_sound
@@ -253,7 +264,7 @@ def make_sound_4
       cycle_i_prev = ci
     end
 
-    osc_sq(x) * (ratio_inv**2) * MASTER_VOLUME
+    osc_pulse(x) * (ratio_inv**2) * MASTER_VOLUME
   }
 
   memory_sound
@@ -278,21 +289,10 @@ def make_sound_5
     freq = freqs[i]
     x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
-    osc_sq(x, 0.125) * vol * MASTER_VOLUME
+    osc_pulse(x, 0.125) * vol * MASTER_VOLUME
   }
 
   memory_sound
-end
-
-def wavetable_normalize(wt)
-  max = wt.map(&:abs).max
-  wt.map{|x| x.to_f / max }
-end
-
-def wavetable_get(wt, x)
-  ratio = (x.to_f / TWO_PI) % 1
-  i = (wt.size * ratio).floor
-  wt[i]
 end
 
 def make_sound_6
@@ -314,15 +314,15 @@ def make_sound_6
     ratio = i.to_f / num_samples
     ratio_inv = 1.0 - ratio
 
-    v = osc_sq(x, 0.25) * vol * ratio_inv
+    v = osc_pulse(x, 0.25)
 
     fi = (freqs.size * ratio).floor
-    f = freqs[fi]
+    freq = freqs[fi]
 
-    x_delta = TWO_PI * f * sec_per_sample
+    x_delta = TWO_PI * freq * sec_per_sample
     x += x_delta
 
-    v * MASTER_VOLUME
+    v * ratio_inv * vol * MASTER_VOLUME
   }
 
   memory_sound
@@ -352,14 +352,14 @@ def make_sound_7
     ratio = i.to_f / num_samples
     ratio_inv = 1.0 - ratio
 
-    v = wavetable_get(wt, x) * vol * ratio_inv
+    v = wavetable_get(wt, x)
 
     fi = (freqs.size * ratio).floor
-    f = freqs[fi]
-    x_delta = TWO_PI * f * sec_per_sample
+    freq = freqs[fi]
+    x_delta = TWO_PI * freq * sec_per_sample
     x += x_delta
 
-    v * MASTER_VOLUME
+    v * ratio_inv * vol * MASTER_VOLUME
   }
 
   memory_sound
@@ -597,7 +597,6 @@ def main
       bi = (Input.mouse_y / BUTTON_H).floor
 
       if Input.mouse_push?(M_LBUTTON)
-        bi = (Input.mouse_y / BUTTON_H).floor
         if Input.mouse_x < WIN_W
           button = button_get(bi)
           if button
