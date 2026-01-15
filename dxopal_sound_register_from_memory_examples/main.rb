@@ -119,6 +119,14 @@ BUTTONS = [
   },
 ]
 
+def button_get(i)
+  if 0 <= i
+    BUTTONS[i]
+  else
+    nil
+  end
+end
+
 BUTTON_H = 40
 WIN_W = 400
 WIN_H = BUTTON_H * BUTTONS.size
@@ -495,11 +503,16 @@ def main
   Window.load_resources do
     Window.loop do
       # button index
-      bi = (Input.mouse_y / BUTTON_H).floor
+      bi =
+        if Input.mouse_y == 0
+          nil
+        else
+          (Input.mouse_y / BUTTON_H).floor
+        end
 
       if Input.mouse_push?(M_LBUTTON)
         if Input.mouse_x < WIN_W
-          button = BUTTONS[bi]
+          button = button_get(bi)
           if button
             button[:onclick].call
           end
@@ -507,7 +520,7 @@ def main
       elsif Input.touch_push?
         bi = (Input.touch_y / BUTTON_H).floor
         if Input.touch_x < WIN_W
-          button = BUTTONS[bi]
+          button = button_get(bi)
           if button
             button[:onclick].call
           end
