@@ -626,6 +626,8 @@ def main
 
         Window.draw_font(10, y + 6, button[:text], FONT_MAIN, color: C_WHITE)
       end
+
+      Window.draw_font(WIN_W - 40, 10, "#{Input.mouse_y.inspect}", FONT_MAIN, color: [80,80,80])
     end
   end
 end
