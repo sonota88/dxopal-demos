@@ -594,7 +594,12 @@ def main
   Window.load_resources do
     Window.loop do
       # button index
-      bi = (Input.mouse_y / BUTTON_H).floor
+      bi =
+        if Input.mouse_y == 0
+          nil
+        else
+          (Input.mouse_y / BUTTON_H).floor
+        end
 
       if Input.mouse_push?(M_LBUTTON)
         if Input.mouse_x < WIN_W
