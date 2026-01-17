@@ -296,12 +296,8 @@ def make_sound_5
 end
 
 def make_sound_6
-  samples = []
   dur_msec = 300
   dur_sec = dur_msec.to_f / 1000
-  srate = MemorySound::SAMPLING_RATE
-  num_samples = (srate * dur_sec).floor
-  sec_per_sample = 1.0 / srate
   vol = 0.7
 
   freqs = [0, 4, 7, 11]
@@ -310,8 +306,8 @@ def make_sound_6
   freqs = freqs * 3
 
   x = 0.0
-  memory_sound = MemorySound.generate(dur_msec) { |i, t|
-    ratio = i.to_f / num_samples
+  memory_sound = MemorySound.generate(dur_msec) { |i, t_sec|
+    ratio = t_sec.to_f / dur_sec
     ratio_inv = 1.0 - ratio
 
     v = osc_pulse(x, 0.25)
@@ -319,7 +315,7 @@ def make_sound_6
     fi = (freqs.size * ratio).floor
     freq = freqs[fi]
 
-    x_delta = TWO_PI * freq * sec_per_sample
+    x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
 
     v * ratio_inv * vol * MASTER_VOLUME
@@ -329,16 +325,12 @@ def make_sound_6
 end
 
 def make_sound_7
-  samples = []
   dur_msec = 500
   dur_sec = dur_msec.to_f / 1000
-  srate = MemorySound::SAMPLING_RATE
-  num_samples = (srate * dur_sec).floor
-  sec_per_sample = 1.0 / srate
   vol = 0.8
 
   wt = wavetable_normalize(
-    [7, -7, 7, -7, -0, -0, -0, -0,]
+    [7, -7, 7, -7, -0, -0, -0, -0]
   )
 
   freqs = [0, 1, 2, 3]
@@ -348,15 +340,15 @@ def make_sound_7
   freqs = freqs * 3
 
   x = 0.0
-  memory_sound = MemorySound.generate(dur_msec) { |i, t|
-    ratio = i.to_f / num_samples
+  memory_sound = MemorySound.generate(dur_msec) { |i, t_sec|
+    ratio = t_sec.to_f / dur_sec
     ratio_inv = 1.0 - ratio
 
     v = wavetable_get(wt, x)
 
     fi = (freqs.size * ratio).floor
     freq = freqs[fi]
-    x_delta = TWO_PI * freq * sec_per_sample
+    x_delta = TWO_PI * freq * MemorySound::SEC_PER_SAMPLE
     x += x_delta
 
     v * ratio_inv * vol * MASTER_VOLUME
